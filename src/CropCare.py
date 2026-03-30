@@ -6,17 +6,21 @@ import sys
 from PIL import Image
 from datetime import datetime
 
-# ---------------- 0. SYSTEM PATH SETUP ----------------
-# Folder structure နက်နေပါက import ရှာတွေ့ရန်အတွက်
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# ---------------- 1. SETUP PATHS ----------------
+# လက်ရှိ file (app.py) ရှိတဲ့ folder ကို base အဖြစ်ယူမယ်
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+def get_path(filename):
+    return os.path.join(BASE_DIR, filename)
+
+# prediction_script ကို import လုပ်ခြင်း
+sys.path.append(BASE_DIR)
 try:
     from prediction_script import predict_paddy
 except ImportError:
-    # တကယ်လို့ src folder ထဲမှာ ရှိနေရင်
-    from src.prediction_script import predict_paddy
+    st.error("prediction_script.py ကို ရှာမတွေ့ပါ။ ဖိုင်တည်နေရာကို ပြန်စစ်ပေးပါ။")
 
-# ---------------- 1. VARIETY MAPPING ----------------
+# ---------------- 2. VARIETY MAPPING ----------------
 VARIETY_MAPPING = {
     "adt45": "အေဒီတီ-၄၅ (ADT 45)",
     "irland": "အိုင်ယာလန် (Irland)",
@@ -31,64 +35,33 @@ VARIETY_MAPPING = {
     "default": "အထွေထွေ စပါးမျိုး"
 }
 
-# ---------------- 2. DATA LOADING FUNCTIONS ----------------
+# ---------------- 3. LOAD DATA ----------------
 def load_knowledge():
-    try:
-        with open('knowledge.json', 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        st.error(f"Knowledge file load လုပ်ရာတွင် အခက်အခဲရှိပါသည်: {e}")
+    path = get_path('knowledge.json')
+    if not os.path.exists(path):
+        st.error(f"ဖိုင်မတွေ့ပါ: {path}")
         return {}
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 def load_shops():
-    try:
-        with open('shops.json', 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        st.error(f"Shops file load လုပ်ရာတွင် အခက်အခဲရှိပါသည်: {e}")
+    path = get_path('shops.json')
+    if not os.path.exists(path):
+        st.error(f"ဖိုင်မတွေ့ပါ: {path}")
         return []
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-def log_to_csv(city, disease_name_mm):
-    if disease_name_mm == "ကျန်းမာသော စပါးပင်":
-        return
-        
-    file_name = 'disease_data.csv'
-    current_time = datetime.now()
-    
-    new_data = {
-        "Date": current_time.strftime("%Y-%m-%d"),
-        "Time": current_time.strftime("%H:%M:%S"),
-        "City": city,
-        "Disease": disease_name_mm
-    }
-    
-    df_new = pd.DataFrame([new_data])
-    
-    if not os.path.isfile(file_name):
-        df_new.to_csv(file_name, index=False, encoding='utf-8-sig')
-    else:
-        df_new.to_csv(file_name, mode='a', index=False, header=False, encoding='utf-8-sig')
-
-# ---------------- 3. MAIN APP ----------------
+# ---------------- 4. MAIN APP ----------------
 def main():
     knowledge_base = load_knowledge()
     shops_data = load_shops()
 
-    st.set_page_config(page_title="Crop Care - Paddy Disease Detector", layout="wide")
-
-    st.markdown("""
-    <style>
-        .main .block-container { max-width: 1100px; padding-top: 2rem; }
-        .stButton>button { width: 100%; border-radius: 8px; height: 3.5em; background-color: #2e7d32; color: white; font-weight: bold; border: none; }
-        .stButton>button:hover { background-color: #1b5e20; color: white; }
-    </style>
-    """, unsafe_allow_html=True)
-
+    st.set_page_config(page_title="Crop Care", layout="wide")
+    
     st.title("🌾 Crop Care (စပါးရောဂါ ရှာဖွေသူ)")
-    st.markdown("စပါးရွက်ပုံရိပ်ကို အသုံးပြု၍ ရောဂါရှာဖွေခြင်းနှင့် ကုသနည်းလမ်းညွှန်များကို ကြည့်ရှုနိုင်ပါသည်။")
     st.write("---")
 
-    # Sidebar သို့မဟုတ် အပေါ်တွင် မြို့ရွေးရန်
     selected_city = st.selectbox(
         "📍 မိမိတည်ရှိရာ မြို့နယ်ကို ရွေးချယ်ပါ:",
         options=["မန္တလေးမြို့", "ရန်ကုန်မြို့", "ညောင်တုန်းမြို့", "ပန်းတနော်မြို့"]
@@ -100,96 +73,76 @@ def main():
         img = Image.open(uploaded_file)
         col1, col2 = st.columns([1, 1], gap="large")
 
-        # Session state ကို သုံးပြီး ရလဒ်များကို သိမ်းထားခြင်း
-        if 'last_result' not in st.session_state:
-            st.session_state['last_result'] = None
+        # Predict လုပ်ပြီးသား result ကို ခေတ္တသိမ်းထားရန်
+        if 'last_res' not in st.session_state:
+            st.session_state.last_res = None
 
         with col2:
             st.subheader("🔍 စစ်ဆေးမှု ရလဒ်")
-            predict_btn = st.button("စစ်ဆေးမည် (Predict Now)")
-            
-            if predict_btn:
-                with st.spinner('AI က ပုံကို စစ်ဆေးနေပါတယ်... ခဏစောင့်ပေးပါ'):
+            if st.button("စစ်ဆေးမည် (Predict)"):
+                with st.spinner('ခဏစောင့်ပေးပါ...'):
                     try:
-                        result = predict_paddy(img)
-                        # ရောဂါအမည်ကို key အဖြစ်ပြောင်းလဲခြင်း (ဥပမာ- "Blast" -> "blast")
-                        disease_key = result["disease"].lower().replace(" ", "_")
+                        res = predict_paddy(img)
+                        d_key = res["disease"].lower().replace(" ", "_")
+                        d_info = knowledge_base.get(d_key, knowledge_base.get("normal"))
                         
-                        # Knowledge ထဲမှ ရှာဖွေခြင်း
-                        disease_info = knowledge_base.get(disease_key, knowledge_base.get("normal"))
-                        
-                        # ရလဒ်များကို သိမ်းဆည်းခြင်း
-                        st.session_state['last_result'] = {
-                            "info": disease_info,
-                            "age": result['age'],
-                            "variety": result['variety']
+                        st.session_state.last_res = {
+                            "info": d_info,
+                            "age": res['age'],
+                            "variety": res['variety']
                         }
-                        
-                        log_to_csv(selected_city, disease_info['name_mm'])
-                        st.success("တွက်ချက်မှု အောင်မြင်ပါသည်။")
-                        
                     except Exception as e:
-                        st.error(f"Prediction Error: {e}")
+                        st.error(f"Error: {e}")
 
             # ရလဒ်များကို ပြသခြင်း
-            if st.session_state['last_result']:
-                res = st.session_state['last_result']
-                info = res['info']
-                
-                raw_variety = res['variety'].lower().strip()
-                variety_mm = VARIETY_MAPPING.get(raw_variety, VARIETY_MAPPING["default"])
+            if st.session_state.last_res:
+                info = st.session_state.last_res['info']
+                v_mm = VARIETY_MAPPING.get(st.session_state.last_res['variety'].lower().strip(), VARIETY_MAPPING["default"])
 
                 st.markdown(f"### **{info['name_mm']}**")
-                st.info(f"🌾 **မျိုးစိတ်:** {variety_mm} | 📅 **သက်တမ်း:** {res['age']} ရက်")
+                st.info(f"🌾 **မျိုးစိတ်:** {v_mm} | 📅 **သက်တမ်း:** {st.session_state.last_res['age']} ရက်")
+                st.write(f"**အကြောင်းရင်း:** {info['cause']}")
                 
-                st.markdown("#### 🔬 ဖြစ်ပွားရသည့် အကြောင်းရင်း")
-                st.write(info['cause'])
-                
-                st.markdown("#### 💡 ကုသရန် အကြံပြုချက်")
-                treatment_text = info['treatment']
-                formatted_lines = [f"- {l.strip()}။" for l in treatment_text.split("။") if l.strip()]
-                st.warning("\n\n".join(formatted_lines))
+                st.warning(f"**အကြံပြုချက်:** \n\n {info['treatment']}")
 
         with col1:
             st.subheader("🖼️ တင်ထားသော ပုံ")
-            # use_container_width logic
-            st.image(img, width=450)
+            st.image(img, use_container_width=True)
             
-            if st.session_state['last_result']:
-                info = st.session_state['last_result']['info']
-                st.write("---")
-                
-                # Chemical Key ကို အကြီးအသေး နှစ်မျိုးလုံး စစ်ဆေးခြင်း
+            if st.session_state.last_res:
+                info = st.session_state.last_res['info']
+                # Case-insensitive check for chemical key
                 chem_list = info.get("chemical_treatment") or info.get("Chemical_treatment") or []
                 
                 if chem_list:
+                    st.write("---")
                     st.markdown("#### 🧪 အသုံးပြုနိုင်သော ဆေးများ")
-                    clean_chems = [c.strip() for c in chem_list]
-                    st.success("\n".join([f"- {c}" for c in clean_chems]))
+                    st.success(", ".join(chem_list))
 
-                    # ဆိုင်များကို ရှာဖွေသည့် Logic (Smart Matching)
+                    # --- SHOP MATCHING LOGIC ---
                     matched_shops = []
-                    target_chems = [c.lower() for c in clean_chems]
+                    target_chems = [c.strip().lower() for c in chem_list]
                     
                     for shop in shops_data:
-                        # မြို့အမည်နှင့် ဆေးအမည် တိုက်စစ်ခြင်း
-                        shop_city = str(shop.get("city", "")).strip()
-                        if shop_city == selected_city.strip():
-                            shop_items = [str(item).strip().lower() for item in shop.get("sold_items", [])]
-                            if any(target in shop_items for target in target_chems):
+                        # မြို့အမည် တူမတူစစ် (Space ဖယ်ပြီးစစ်)
+                        if str(shop.get("city", "")).strip() == selected_city.strip():
+                            shop_items = [str(i).strip().lower() for i in shop.get("sold_items", [])]
+                            # ဆေးတစ်မျိုးမျိုး ကိုက်ညီရင် ဆိုင်စာရင်းထဲထည့်
+                            if any(tc in shop_items for tc in target_chems):
                                 matched_shops.append(shop)
 
                     st.markdown(f"#### 🏪 {selected_city} ရှိ ဆေးဆိုင်များ")
                     if matched_shops:
-                        for shop in matched_shops:
-                            with st.expander(f"🏪 {shop['shop_name_mm']}"):
-                                st.write(f"📍 **လိပ်စာ:** {shop['address']}")
-                                st.write(f"📞 **ဖုန်း:** {shop['phone_number']}")
+                        for s in matched_shops:
+                            with st.expander(f"🏪 {s['shop_name_mm']}"):
+                                st.write(f"📍 {s['address']}")
+                                st.write(f"📞 {s['phone_number']}")
                     else:
-                        st.warning(f"လက်ရှိတွင် {selected_city} ၌ အဆိုပါဆေးများ ရရှိနိုင်မည့်ဆိုင် မတွေ့ရှိသေးပါ။")
+                        st.warning(f"{selected_city} တွင် ဤရောဂါအတွက် ဆေးရနိုင်သောဆိုင် မတွေ့သေးပါ။")
+
     else:
-        st.info("စစ်ဆေးလိုသော စပါးရွက်ပုံကို Upload တင်ပေးပါ။")
-        st.session_state['last_result'] = None
+        st.session_state.last_res = None
+        st.info("ကျေးဇူးပြု၍ ပုံတင်ပေးပါ။")
 
 if __name__ == "__main__":
     main()
