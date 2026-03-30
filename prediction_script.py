@@ -1,10 +1,15 @@
 import os
+import sys
 import cv2
 import pickle
 import numpy as np
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
 
 image_size   = 224
 encoder_path = "trained_model/encoders.pkl"
