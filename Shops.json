@@ -1,0 +1,57 @@
+[
+  {
+    "shop_name_mm": "ဦးဟန်မြင့် ဆေးအရောင်းဆိုင်",
+    "city": "ပန်းတနော်မြို့",
+    "address": "BOC လမ်း၊ ဒိန်းဒေါင်းဂိတ်ဟောင်း",
+    "phone_number": "097796990750",
+    "sold_items": [
+      "Revive", "Unity", "Armo Venus", "Proper", "Pro One", "Laung", "M-Thein",
+      "Awba zombie", "Azyphate", "Py Di", "Better", "Kun Bee", "Kasuca Mizen",
+      "Cartap", "Billion", "Copxide"
+    ]
+  },
+  {
+    "shop_name_mm": "ကိုလူချော ဆေးအရောင်းဆိုင်",
+    "city": "ညောင်တုန်းမြို့",
+    "address": "ကမ်းနား(၉)လမ်း၊ အမှတ်(၄) ရက်ကွပ်၊",
+    "phone_number": "09949067296",
+    "sold_items": [
+      "Revive", "Unity", "Armo Venus", "Proper", "Pro One", "Laung", "M-Thein",
+      "Awba zombie", "Azyphate", "Py Di", "Better", "Kun Bee", "Kasuca Mizen",
+      "Cartap", "Billion", "Copxide"
+    ]
+  },
+  {
+    "shop_name_mm": "ပြည်မြန်မာ ဆေးအရောင်းဆိုင်",
+    "city": "ရန်ကုန်မြို့",
+    "address": "ကမ်းနား(၉)လမ်း၊ အမှတ်(၄) ရက်ကွပ်၊",
+    "phone_number": "09940067296",
+    "sold_items": [
+      "Revive", "Unity", "Armo Venus", "Proper", "Pro One", "Laung", "M-Thein",
+      "Awba zombie", "Azyphate", "Py Di", "Better", "Kun Bee", "Kasuca Mizen",
+      "Cartap", "Billion", "Copxide"
+    ]
+  },
+  {
+    "shop_name_mm": "ပြည်မြန်မာ ဆေးအရောင်းဆိုင်(၂)",
+    "city": "ရန်ကုန်မြို့",
+    "address": "ဒဂုံမြို့နယ်၊ အမှတ်(၁၈) ရက်ကွပ်၊",
+    "phone_number": "09971067296",
+    "sold_items": [
+      "Revive", "Unity", "Armo Venus", "Proper", "Pro One", "Laung", "M-Thein",
+      "Awba zombie", "Azyphate", "Py Di", "Better", "Kun Bee", "Kasuca Mizen",
+      "Cartap", "Billion", "Copxide"
+    ]
+  },
+  {
+    "shop_name_mm": "ဖြိုးမောက် ဓာတ်မြေသြဇာရောင်း၀ယ်ရေး",
+    "city": "မန္တလေးမြို့",
+    "address": "၅၆လမ်း၊ လမ်းသစ် ရက်ကွပ်၊",
+    "phone_number": "09971067126",
+    "sold_items": [
+      "Revive", "Unity", "Armo Venus", "Proper", "Pro One", "Laung", "M-Thein",
+      "Awba zombie", "Azyphate", "Py Di", "Better", "Kun Bee", "Kasuca Mizen",
+      "Cartap", "Billion", "Copxide"
+    ]
+  }
+]

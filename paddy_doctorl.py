@@ -14,17 +14,14 @@ class PaddyDiseaseClassifierModel:
         self.max_age = max_age
 
     def build_model(self, fine_tune_at=100):
-        # Base Model Load လုပ်ခြင်း
         base_model = MobileNetV2(
             input_shape=(self.img_size, self.img_size, 3),
             include_top=False,
             weights='imagenet'
         )
 
-        # Fine-tuning: Layer အားလုံးကို အရင်ဖွင့်ပါ
         base_model.trainable = True
         
-        # သတ်မှတ်ထားတဲ့ layer အထိပဲ ပြန်ပိတ်ပါ (အစောပိုင်း layer တွေက general features တွေမို့ပါ)
         for layer in base_model.layers[:fine_tune_at]:
             layer.trainable = False
 
@@ -37,10 +34,10 @@ class PaddyDiseaseClassifierModel:
         inputs = tf.keras.Input(shape=(self.img_size, self.img_size, 3))
         
         x = data_augmentation(inputs)
-        x = base_model(x, training=True) # Fine-tuning အတွက် True ထားပါ
+        x = base_model(x, training=True)
         x = layers.GlobalAveragePooling2D()(x)
-        x = layers.Dense(256, activation='relu')(x) # Capacity နည်းနည်းတိုးလိုက်ပါတယ်
-        x = layers.Dropout(0.4)(x) # Overfitting ကာကွယ်ရန်
+        x = layers.Dense(256, activation='relu')(x)
+        x = layers.Dropout(0.4)(x)
 
         # Outputs
         disease_out = layers.Dense(len(self.disease_encoder.classes_), activation='softmax', name='disease')(x)
@@ -49,7 +46,6 @@ class PaddyDiseaseClassifierModel:
 
         self.model = models.Model(inputs=inputs, outputs=[disease_out, variety_out, age_out])
 
-        # Learning Rate ကို Fine-tuning အတွက် အနိမ့်ထားပါ (1e-5)
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
             loss={
@@ -66,12 +62,10 @@ class PaddyDiseaseClassifierModel:
         self.model.summary()
 
     def train(self, train_ds, val_ds, epochs=100):
-        # Model မရှိသေးရင် အသစ်ဆောက်ပါ
         if self.model is None:
             print("Building new model...")
             self.build_model()
 
-        # အကောင်းဆုံး Weight တွေကို အမြဲသိမ်းထားဖို့ Checkpoint ထည့်ပါမယ်
         checkpoint = ModelCheckpoint(
             "best_rice_model.keras", 
             monitor='val_disease_accuracy', 
@@ -79,7 +73,6 @@ class PaddyDiseaseClassifierModel:
             mode='max'
         )
 
-        # Patience ကို ၁၅ အထိ တိုးလိုက်ပါတယ်
         early_stop = EarlyStopping(
             monitor='val_loss', 
             patience=15, 
