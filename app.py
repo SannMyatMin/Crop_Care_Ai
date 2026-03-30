@@ -1,6 +1,7 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+root_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, root_path)
 
 import streamlit as st
 from streamlit_option_menu import option_menu
