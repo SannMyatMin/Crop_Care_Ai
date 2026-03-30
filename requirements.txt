@@ -4,4 +4,4 @@ plotly
 requests
 opencv-python-headless
 streamlit-option-menu
-tensorflow==2.15.0
+tensorflow
