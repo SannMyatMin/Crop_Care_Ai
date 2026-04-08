@@ -60,3 +60,12 @@ System utilizes a customized MobileNetV2 architecture, specifically designed for
 - **Training Result**
 
 <img src="imgs/Training_History.png" style="border: 2px solid #555; border-radius: 10px;">
+
+### Bridging AI with Local Knowledge(Data Strategy) 📚 
+Crop Care AI doesn't just provide raw predictions; it delivers actionable insights by integrating AI outputs with a localized knowledge base. This approach ensures the information is practical and reliable for Myanmar farmers.
+
+* **Curated Knowledge Base:** Instead of generic AI responses, the system uses a verified database of paddy diseases, causes, and treatments. This information is meticulously collected from real-life agricultural practices and widely used field methods in Myanmar.
+
+* **Dynamic Shop Mapping:** To make the solution truly convenient, we map the recommended treatments to a curated database of local agro-chemical shops. This bridges the gap between diagnosis and actual cure.
+
+* **Localized Context:** By using these Knowledge-based expert systems, it ensures that every piece of advice is linguistically appropriate and culturally relevant to the local farming community.
