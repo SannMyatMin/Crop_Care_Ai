@@ -14,6 +14,7 @@ The heart of the system is designed for **maximum convenience**. Farmers no long
 - **Simple Input:** Select city and upload a photo of the affected paddy leaf.
 - **AI Analysis:** System instantly diagnoses the disease, explains the root cause, and provides a detailed treatment plan in Burmese.
 - **End-to-End Solution:** It doesn't just stop at a diagnosis—it recommends specific **usable drugs** and automatically finds **nearby agro-shops** in user's city that stock those exact items.
+
   ![Result Image](imgs/crop_care_1.png)
   ![Result Image](imgs/crop_care_2.png)
   ![Result Image](imgs/crop_care_3.png)
@@ -24,11 +25,13 @@ The heart of the system is designed for **maximum convenience**. Farmers no long
 ### 📊 Community Trends (Analytics):
 
 Visualizes disease outbreaks in the cities to help with regional prevention and planning.
+
 ![Result Image](imgs/city_disease.png)
 
 ### Smart Weather Insights 🌦️
 
 Real-time weather monitoring with AI alerts for irrigation and pesticide spraying schedules.
+
 ![Result Image](imgs/weather.png)
 
 ## Key Features
