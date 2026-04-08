@@ -50,4 +50,4 @@ System utilizes a customized MobileNetV2 architecture, specifically designed for
 
 - **Training Result**
 
-![Result Image](imgs/Training_History.png)
+<img src="imgs/Training_History.png" style="border: 2px solid #555; border-radius: 10px;">
