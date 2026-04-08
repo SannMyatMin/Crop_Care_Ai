@@ -22,13 +22,15 @@ The heart of the system is designed for **maximum convenience**. Farmers no long
 
 - **🛠️ Integrated Marketplace:** Automatically filters local shops based on the required chemical treatments.
 
-  ![Result Image](imgs/crop_care_4.png)
+  |![Result Image](imgs/crop_care_4.png)|
+  | :---: |
 
 ### Community Trends (Analytics) 📊
 
 Visualizes disease outbreaks in the cities to help with regional prevention and planning.
 
-![Result Image](imgs/city_disease.png)
+| ![Result Image](imgs/city_disease.png) |
+| :---: |
 
 ### Smart Weather Insights 🌦️
 
